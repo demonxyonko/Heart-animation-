@@ -87,3 +87,81 @@ renderer.setSize(window.innerWidth, window.innerHeight);
 composer.setSize(window.innerWidth, window.innerHeight);
 
 });
+
+// ------------------------------
+// HEART PARTICLES
+// ------------------------------
+
+const positions = [];
+const colors = [];
+
+const particleCount = 7000;
+
+const color = new THREE.Color();
+
+for (let i = 0; i < particleCount; i++) {
+
+    const t = Math.random() * Math.PI * 2;
+
+    const x =
+        16 * Math.pow(Math.sin(t), 3);
+
+    const y =
+        13 * Math.cos(t) -
+        5 * Math.cos(2 * t) -
+        2 * Math.cos(3 * t) -
+        Math.cos(4 * t);
+
+    const depth = (Math.random() - 0.5) * 8;
+
+    const scale = 0.22 + Math.random() * 0.05;
+
+    positions.push(
+        x * scale + (Math.random() - 0.5) * 0.25,
+        y * scale + (Math.random() - 0.5) * 0.25,
+        depth
+    );
+
+    color.setHSL(
+        0.95 + Math.random() * 0.03,
+        1,
+        0.6 + Math.random() * 0.2
+    );
+
+    colors.push(color.r, color.g, color.b);
+}
+
+const geometry = new THREE.BufferGeometry();
+
+geometry.setAttribute(
+    "position",
+    new THREE.Float32BufferAttribute(positions, 3)
+);
+
+geometry.setAttribute(
+    "color",
+    new THREE.Float32BufferAttribute(colors, 3)
+);
+
+const material = new THREE.PointsMaterial({
+
+    size: 0.18,
+
+    vertexColors: true,
+
+    transparent: true,
+
+    opacity: 0.95,
+
+    blending: THREE.AdditiveBlending,
+
+    depthWrite: false
+
+});
+
+const heart = new THREE.Points(
+    geometry,
+    material
+);
+
+heartGroup.add(heart);
