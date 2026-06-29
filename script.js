@@ -165,3 +165,67 @@ const heart = new THREE.Points(
 );
 
 heartGroup.add(heart);
+
+// ------------------------------
+// ANIMATION
+// ------------------------------
+
+const clock = new THREE.Clock();
+
+const original = geometry.attributes.position.array.slice();
+
+function animate() {
+
+    requestAnimationFrame(animate);
+
+    const time = clock.getElapsedTime();
+
+    const pos = geometry.attributes.position.array;
+
+    for (let i = 0; i < pos.length; i += 3) {
+
+        const ox = original[i];
+        const oy = original[i + 1];
+        const oz = original[i + 2];
+
+        const wave =
+            Math.sin(
+                time * 3 +
+                ox * 0.7 +
+                oy * 0.7
+            ) * 0.25;
+
+        pos[i] = ox;
+        pos[i + 1] = oy + wave;
+        pos[i + 2] = oz + Math.cos(time * 2 + oy) * 0.15;
+
+    }
+
+    geometry.attributes.position.needsUpdate = true;
+
+    // Heartbeat
+
+    const beat =
+        1 +
+        Math.sin(time * 4) * 0.04;
+
+    heartGroup.scale.set(
+        beat,
+        beat,
+        beat
+    );
+
+    // Rotation
+
+    heartGroup.rotation.y += 0.004;
+
+    heartGroup.rotation.x =
+        Math.sin(time * 0.5) * 0.15;
+
+    controls.update();
+
+    composer.render();
+
+}
+
+animate();
